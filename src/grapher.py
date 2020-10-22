@@ -1,4 +1,5 @@
 import pygame
+import json
 from src.problem.world import World
 from src.problem.car import Car
 
@@ -21,8 +22,12 @@ class Grapher:
         self.__done = False
         pygame.display.set_caption("IA Driver")
 
-        self.__world = World("world1.json")
-        self.__car = Car(100, 100, 1)
+        #deberíamos pasarle la wea desde aqui 
+        self.__world = World("world2.json")
+        with open("world2.json", 'r') as fh:
+                x,y,r = json.load(fh)["init_position"]
+        
+        self.__car = Car(x, y, r)
 
     def run(self):
         """

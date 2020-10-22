@@ -94,3 +94,4 @@ class Car:
         for segment in self.segments:
             segment.draw(surface)
         pygame.draw.circle(surface, (200,0,0), (self.x, self.y), 5)
+
