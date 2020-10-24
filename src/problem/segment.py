@@ -1,21 +1,24 @@
 from __future__ import annotations
 from typing import Tuple
 import pygame
+import math
 
 class Segment:
 
     p1: Tuple[float]
     p2: Tuple[float]
+    lenght: float
     color = (111, 111, 111)
 
     def __init__(self, p1: Tuple[float], p2: Tuple[float]):
         self.p1 = p1
         self.p2 = p2
+        self.lenght = math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
 
     def get_min_p(self) -> Tuple[float]:
         # !FIXME: Esto podria generar errores si el segmento es vertical
         # *OPTIMIZE: Esto se podría dejar preprocesar al inicializar
-        return self.p1 if self.p1[0] < self.p2[0] else self.p2
+        return self.p1 if self.p1[0] <= self.p2[0] else self.p2
 
     def get_max_p(self) -> Tuple[float]:
         return self.p1 if self.p1[0] > self.p2[0] else self.p2
@@ -73,9 +76,9 @@ class Segment:
         px = pp1[0] + lambda1 * (pp2[0] - pp1[0])
         py = pp1[1] + lambda1 * (pp2[1] - pp1[1])
 
-        if pp1[0] <= px <= pp2[0]:
+        if pp1[0] <= px <= pp2[0] and pp3[0] <= px <= pp4[0]:
             return px, py
         return None
 
-    def draw(self, surface: pygmae.surface.Surface):
+    def draw(self, surface: pygame.surface.Surface):
         pygame.draw.line(surface, self.color, self.p1, self.p2)

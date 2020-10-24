@@ -10,6 +10,8 @@ class Grapher:
     # Mundo del simulador
     __world: World
     __car: Car
+    __turn_left = False
+    __turn_right = False
 
     SCREEN_WIDTH = 600
     SCREEN_HEIGHT = 600
@@ -22,7 +24,7 @@ class Grapher:
         pygame.display.set_caption("IA Driver")
 
         self.__world = World("world1.json")
-        self.__car = Car(100, 100, 1)
+        self.__car = Car(self.__world, 100, 100, 1)
 
     def run(self):
         """
@@ -35,6 +37,16 @@ class Grapher:
                 if event.type == pygame.QUIT:
                     self.__done = True
                     break
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_a:
+                        self.__turn_left = True
+                    elif event.key == pygame.K_d:
+                        self.__turn_right = True
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_a:
+                        self.__turn_left = False
+                    elif event.key == pygame.K_d:
+                        self.__turn_right = False
 
             # Actualizando pantalla
             self.__draw_and_update()
@@ -44,3 +56,9 @@ class Grapher:
         self.__world.draw(self.__screen)
         self.__car.draw(self.__screen)
         pygame.display.update()
+
+        # ! Temporal
+        if self.__turn_left:
+            self.__car.turn_left()
+        if self.__turn_right:
+            self.__car.turn_right()

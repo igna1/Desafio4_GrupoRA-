@@ -3,6 +3,7 @@ import math
 import pygame
 
 from src.problem.segment import Segment
+from src.problem.lidar import Lidar
 
 class Car:
 
@@ -20,15 +21,19 @@ class Car:
     segments: List[Segment]
     color = (200, 100, 100)
 
-    # Dimensiones del carro
-    WIDTH = 10
-    HEIGHT = 20
+    # Lidar del carro
+    lidar: Lidar
 
-    def __init__(self, x: float, y: float, rotation: float = 0):
+    # Dimensiones del carro
+    WIDTH = 20
+    HEIGHT = 10
+
+    def __init__(self, world, x: float, y: float, rotation: float = 0):
         self.x = x
         self.y = y
         self.rotation = rotation
         self.velocity = 1
+        self.lidar = Lidar(world, [self.x, self.y], self.rotation)
         
         # Creando cuarpo del carro
         p1 = (-self.WIDTH/2, -self.HEIGHT/2)
@@ -53,6 +58,15 @@ class Car:
         self.y += dy
 
         self.__update_segments(dx=dx, dy=dy)
+        self.lidar.set_position([self.x, self.y], self.rotation)
+
+    def turn_left(self):
+        self.rotation -= 0.1
+        self.__update_segments(dr=-0.1)
+    
+    def turn_right(self):
+        self.rotation += 0.1
+        self.__update_segments(dr=0.1)
 
     def __update_segments(self, dx: float = 0, dy: float = 0, dr: float = 0):
         for segment in self.segments:
@@ -89,8 +103,10 @@ class Car:
             segment.p1 = p1
             segment.p2 = p2
 
-
     def draw(self, surface: pygame.surface.Surface):
+        self.__update()
         for segment in self.segments:
             segment.draw(surface)
         pygame.draw.circle(surface, (200,0,0), (self.x, self.y), 5)
+
+        self.lidar.draw(surface)
