@@ -24,7 +24,7 @@ class Grapher:
         pygame.display.set_caption("IA Driver")
 
         self.__world = World("world1.json")
-        self.__car = Car(self.__world, 100, 100, 1)
+        self.__car = Car(self.__world, 200, 100, 1)
 
     def run(self):
         """

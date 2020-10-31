@@ -4,6 +4,7 @@ import pygame
 
 from src.problem.segment import Segment
 from src.problem.lidar import Lidar
+from src.problem.world import World
 
 class Car:
 
@@ -17,12 +18,18 @@ class Car:
     # Velocidad del carro
     velocity: float
 
+    # Estado del carro
+    crashed: bool
+
     # Cuerpo del carro
     segments: List[Segment]
     color = (200, 100, 100)
 
     # Lidar del carro
     lidar: Lidar
+
+    # Mundo en donde se encuentra el carro
+    world: World
 
     # Dimensiones del carro
     WIDTH = 20
@@ -34,7 +41,7 @@ class Car:
         self.rotation = rotation
         self.velocity = 1
         self.lidar = Lidar(world, [self.x, self.y], self.rotation)
-        
+
         # Creando cuarpo del carro
         p1 = (-self.WIDTH/2, -self.HEIGHT/2)
         p2 = (self.WIDTH/2, -self.HEIGHT/2)
@@ -46,10 +53,16 @@ class Car:
             Segment(p3, p4),
             Segment(p4, p1)
         ]
-        
+
         self.__update_segments(dx=x, dy=y, dr=rotation)
+        self.crashed = False
+        self.world = world
 
     def __update(self):
+        # Si el auto está colisionado no se actualiza
+        if self.crashed:
+            return
+
         # Actualizando posición en base a la velocidad y a la rotación
         dx = self.velocity * math.cos(self.rotation)
         dy = self.velocity * math.sin(self.rotation)
@@ -60,13 +73,27 @@ class Car:
         self.__update_segments(dx=dx, dy=dy)
         self.lidar.set_position([self.x, self.y], self.rotation)
 
+        # Comprobando colision del carro
+        for segment in self.segments:
+            if self.crashed:
+                break
+            for world_segment in self.world.segments:
+                if world_segment.intersect(segment):
+                    self.crashed = True
+                    break
+
+            if self.crashed:
+                break
+
     def turn_left(self):
-        self.rotation -= 0.1
-        self.__update_segments(dr=-0.1)
+        if not self.crashed:
+            self.rotation -= 0.1
+            self.__update_segments(dr=-0.1)
     
     def turn_right(self):
-        self.rotation += 0.1
-        self.__update_segments(dr=0.1)
+        if not self.crashed:
+            self.rotation += 0.1
+            self.__update_segments(dr=0.1)
 
     def __update_segments(self, dx: float = 0, dy: float = 0, dr: float = 0):
         for segment in self.segments:

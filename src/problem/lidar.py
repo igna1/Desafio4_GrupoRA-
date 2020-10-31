@@ -13,8 +13,8 @@ class Lidar:
     
     # Constantes
     LASER_LENGHT = 200              # Largo de cada laser
-    LIDAR_AMPLITUDE = math.pi/2       # Angulo de cobertura del lidar en radianes
-    NUMBER_OF_LASERS = 5
+    LIDAR_AMPLITUDE = math.pi       # Angulo de cobertura del lidar en radianes
+    NUMBER_OF_LASERS = 20
 
     def __init__(self, world: World, position: List[float], rotation: float):
         self.__world = world

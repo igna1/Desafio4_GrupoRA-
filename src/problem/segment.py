@@ -37,7 +37,11 @@ class Segment:
         # !FIXME: arreglar esto cuando alguno de los segmentos son verticales
         pp1 = self.get_min_p()
         pp2 = self.get_max_p()
-        px, _ = self.get_intersection(segment)
+        intersection = self.get_intersection(segment)
+        if intersection is None:
+            return False
+        
+        px, _ = intersection
 
         return pp1[0] <= px <= pp2[0]
 
