@@ -11,6 +11,8 @@ class Grapher:
     # Mundo del simulador
     __world: World
     __car: Car
+    __turn_left = False
+    __turn_right = False
 
     SCREEN_WIDTH = 600
     SCREEN_HEIGHT = 600
@@ -22,12 +24,17 @@ class Grapher:
         self.__done = False
         pygame.display.set_caption("IA Driver")
 
+<<<<<<< HEAD
         #deberíamos pasarle la wea desde aqui 
         self.__world = World("world2.json")
         with open("world2.json", 'r') as fh:
                 x,y,r = json.load(fh)["init_position"]
         
         self.__car = Car(x, y, r)
+=======
+        self.__world = World("world1.json")
+        self.__car = Car(self.__world, 200, 100, 1)
+>>>>>>> origin/problema
 
     def run(self):
         """
@@ -40,6 +47,16 @@ class Grapher:
                 if event.type == pygame.QUIT:
                     self.__done = True
                     break
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_a:
+                        self.__turn_left = True
+                    elif event.key == pygame.K_d:
+                        self.__turn_right = True
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_a:
+                        self.__turn_left = False
+                    elif event.key == pygame.K_d:
+                        self.__turn_right = False
 
             # Actualizando pantalla
             self.__draw_and_update()
@@ -49,3 +66,9 @@ class Grapher:
         self.__world.draw(self.__screen)
         self.__car.draw(self.__screen)
         pygame.display.update()
+
+        # ! Temporal
+        if self.__turn_left:
+            self.__car.turn_left()
+        if self.__turn_right:
+            self.__car.turn_right()
