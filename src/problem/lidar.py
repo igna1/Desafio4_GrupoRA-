@@ -23,6 +23,13 @@ class Lidar:
 
         self.color = (200, 100, 100)
 
+    def update_world(self, world, position, rotation):
+        self.__world = world
+        self.__position = position
+        self.__rotation = rotation
+
+        self.color = (200, 100, 100)
+
     def set_position(self, position: List[float], rotation: float):
         self.__position = position
         self.__rotation = rotation

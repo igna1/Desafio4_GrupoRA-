@@ -138,6 +138,14 @@ class Car:
             if self.distance > 3000:
                 return
 
+    def reset_world(self, world):
+        self.world = world
+        self.x = world.init_position[0]
+        self.y = world.init_position[1]
+        self.rotation = world.init_position[2]
+        self.lidar = Lidar(world, [self.x, self.y], self.rotation)
+
+
     def __update_segments(self, dx: float = 0, dy: float = 0, dr: float = 0):
         for segment in self.segments:
             p1 = list(segment.p1)

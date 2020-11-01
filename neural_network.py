@@ -72,9 +72,9 @@ class Layer:
 		self.n_inputs = inputs
 		self.n_neurons = neurons
 		self.weights = np.random.randn(inputs,neurons)
-		self.biases = np.zeros((1,neurons))
+		self.biases = np.zeros((1, neurons))
 
-	def sigmoid_activation(self,x):
+	def sigmoid_activation(self, x):
 		x = x.astype(np.float64)
 		return 1/(1 + np.exp(-x))
 

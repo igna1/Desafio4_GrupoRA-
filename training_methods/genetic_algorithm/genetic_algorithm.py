@@ -21,7 +21,8 @@ def create_population(nb_population: int, hidden_layers, world, x, y, rotation):
 class GeneticAlgorithm:
 
     def __init__(self, initial_population, lambda_, mu, selection,
-                 mutation, crossover, world, hidden_layers, x, y, rotation, fitness=np.inf, generations=50):
+                 mutation, crossover, world, hidden_layers, x, y, rotation, fitness=np.inf, generations=50,
+                 instances=None):
         self.initial_population = initial_population
         self.population = create_population(initial_population, hidden_layers, world, x, y, rotation)
         self.problem = world
@@ -33,6 +34,7 @@ class GeneticAlgorithm:
         self.generations = 0
         self.max_fitness = fitness
         self.max_gen = generations
+        self.instances = instances if instances is not None else None
 
     def execute(self):
         while not self.stop_condition():
@@ -50,12 +52,18 @@ class GeneticAlgorithm:
             self.selection(offsprings)
 
             self.generations += 1
-            print(f'{self.generations} best current fitness: {self.best_fitness} '
-                  f'{self.population[1].fitness} {self.population[2].fitness}\t size: {len(self.population)}')
+            print(f'{self.generations} '
+                  f'best current fitness: {self.best_fitness} '
+                  f'{self.population[1].fitness} '
+                  f'{self.population[2].fitness}\t '
+                  f'size: {len(self.population)}')
 
         print(f'best agent fitness: {self.best_agent.fitness}')
         self.best_agent.save()
         return self.best_agent
+
+    def pick_weights(self):
+        self.population[0].load()
 
     def parent_selection(self):
         """
@@ -143,7 +151,7 @@ class GeneticAlgorithm:
         # Calcular el fitness de cada individuo
         # Propuesta: ejecutar solamente los nuevos individuos creados
         for car in self.population:
-            car.calculate_fitness()
+            car.calculate_fitness(self.instances)
             print('.', end='')
 
         print('\n')

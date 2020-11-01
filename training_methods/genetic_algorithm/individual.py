@@ -33,9 +33,17 @@ class Individual:
         print(f"size: {Individual.size_flattened}\n"
               f"fitness: {self.fitness}")
 
-    def calculate_fitness(self):
+    def calculate_fitness(self, instances=None):
         self.car.run_in_loop()
         self.fitness = self.car.distance
+
+        if instances:
+            for i in instances:
+                self.car.reset_world(i)
+                self.car.run_in_loop()
+                self.fitness += self.car.distance
+            self.fitness /= (len(instances)+1)
+
         return self.fitness
 
     def get_genes(self):
@@ -59,10 +67,12 @@ class Individual:
         self.car = Car(Individual.world, Individual.x, Individual.y, Individual.rotation, Individual.layers)
         for layer in self.car.brain.layers:
             size = layer.weights.size
-            # print(section, size)
             layer.weights = weights[section: section+size].reshape(layer.weights.shape)
 
             section += size
 
     def save(self):
         self.car.save_brain()
+
+    def load(self):
+        self.car.load_brain()
