@@ -37,6 +37,7 @@ class GeneticAlgorithm:
         self.instances = instances if instances is not None else None
 
     def execute(self):
+        print("1 First generation")
         while not self.stop_condition():
             self.evaluate()
             self.population = sorted(self.population,
@@ -52,7 +53,7 @@ class GeneticAlgorithm:
             self.selection(offsprings)
 
             self.generations += 1
-            print(f'{self.generations} '
+            print(f'{self.generations+1} '
                   f'best current fitness: {self.best_fitness} '
                   f'{self.population[1].fitness} '
                   f'{self.population[2].fitness}\t '
@@ -120,9 +121,6 @@ class GeneticAlgorithm:
 
             genes_1 = first_parent.get_genes()
             genes_2 = second_parent.get_genes()
-
-            # print(genes_1[0:split_point-1], genes_1[0:split_point-1].shape)
-            # print(genes_2[split_point:-1], genes_2[split_point:-1].shape)
 
             offsprings[i] = np.concatenate((genes_1[0:split_point+1],
                                            genes_2[split_point:-1]))

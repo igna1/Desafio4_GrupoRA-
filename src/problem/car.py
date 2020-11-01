@@ -109,7 +109,7 @@ class Car:
         if self.counter_turn == Car.MAX_TURNS:
             # print('exceeded turns')
             self.crashed = True
-        # print(self.distance)
+        # print(self.distance, self.x, self.y)
 
     def turn_left(self):
         if self.first_turn != -1:

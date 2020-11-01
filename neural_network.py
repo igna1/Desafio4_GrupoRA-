@@ -19,6 +19,7 @@ class Neural_Network():
 		size = 0
 		for i in range(len(self.layers)):
 			size += self.layers[i].weights.size
+			size += self.layers[i].biases.size
 
 		return size
 	"""

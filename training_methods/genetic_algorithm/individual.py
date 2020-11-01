@@ -34,6 +34,8 @@ class Individual:
               f"fitness: {self.fitness}")
 
     def calculate_fitness(self, instances=None):
+        if self.fitness > DEFAULT_FITNESS:
+            return self.fitness
         self.car.run_in_loop()
         self.fitness = self.car.distance
         fitness = [self.fitness]
@@ -42,12 +44,11 @@ class Individual:
             for i in instances:
                 self.car.reset_world(i)
                 self.car.run_in_loop()
-                # print(self.car.distance, sep=' ')
                 fitness.append(self.car.distance)
                 self.fitness += self.car.distance
-            # self.fitness /= (len(instances)+1)
-            # print()
-            print(fitness)
+            self.fitness /= (len(instances)+1)
+
+            self.car.reset_world(Individual.world)
 
         return self.fitness
 
@@ -59,6 +60,7 @@ class Individual:
         layers = []
         for layer in self.car.brain.layers:
             layers.append(layer.weights.flatten())
+            layers.append(layer.biases.flatten())
         return np.concatenate(layers)
 
     def overwrite(self, weights):
@@ -72,9 +74,12 @@ class Individual:
         self.car = Car(Individual.world, Individual.x, Individual.y, Individual.rotation, Individual.layers)
         for layer in self.car.brain.layers:
             size = layer.weights.size
+            bias_size = layer.biases.size
             layer.weights = weights[section: section+size].reshape(layer.weights.shape)
-
             section += size
+
+            layer.biases = weights[section: section+bias_size].reshape(layer.biases.shape)
+            size += bias_size
 
     def save(self):
         self.car.save_brain()

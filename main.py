@@ -1,18 +1,17 @@
 from src.grapher import Grapher
-from src.problem.segment import Segment
 from training_methods.genetic_algorithm.genetic_algorithm import GeneticAlgorithm
 from training_methods.genetic_algorithm.individual import Individual
 from src.problem.world import World
 
 
-WORLD = 'worlds/world_large.json'
+# WORLD = 'worlds/world_large.json'
 # WORLD = 'worlds/ezworld.json'
 # WORLD = 'worlds/world3.json'
 # WORLD = 'worlds/001.json'
 # WORLD = 'worlds/002.json'
 # WORLD = 'worlds/003.json'
 # WORLD = 'worlds/004.json'
-# WORLD = 'worlds/005.json'
+WORLD = 'worlds/005.json'
 
 
 def main():
@@ -22,13 +21,13 @@ def main():
     print(f'seed: {ran}')
     # stop_condition = None  # Condicion de termino para AG (no implementado)
     worlds_list = [
-        # 'worlds/ezworld.json',
+        'worlds/ezworld.json',
         # 'worlds/world3.json',
         # 'worlds/001.json',
         # 'worlds/002.json',
         # 'worlds/003.json',
         # 'worlds/004.json',
-         'worlds/005.json'
+        #  'worlds/005.json'
     ]
     population = 15  # Poblacion inicial
     lambda_ = 12  # Cantidad de nuevos hijos
@@ -56,10 +55,14 @@ def main():
                                hidden_layers=shape_network,
                                x=x, y=y, rotation=rotation, fitness=fitness,
                                generations=generations,
-                               # instances=worlds
+                               instances=worlds
                                )
 
-    genetic.pick_weights()
+    try:
+        genetic.pick_weights()
+    except FileNotFoundError:
+        print('no existen pesos guardados')
+
     genetic.execute()
 
     print(f"Ejecución terminada. Mejor fitness encontrado: {genetic.best_fitness}.")
