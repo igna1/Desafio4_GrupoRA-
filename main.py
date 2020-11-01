@@ -6,13 +6,13 @@ from src.problem.world import World
 
 
 WORLD = 'worlds/world_large.json'
-# WORLD = 'world/ezworld.json'
-# WORLD = 'world/world3.json'
-# WORLD = 'world/001.json'
-# WORLD = 'world/002.json'
-# WORLD = 'world/003.json'
-# WORLD = 'world/004.json'
-# WORLD = 'world/005.json'
+# WORLD = 'worlds/ezworld.json'
+# WORLD = 'worlds/world3.json'
+# WORLD = 'worlds/001.json'
+# WORLD = 'worlds/002.json'
+# WORLD = 'worlds/003.json'
+# WORLD = 'worlds/004.json'
+# WORLD = 'worlds/005.json'
 
 
 def main():
@@ -22,17 +22,17 @@ def main():
     print(f'seed: {ran}')
     # stop_condition = None  # Condicion de termino para AG (no implementado)
     worlds_list = [
-        'worlds/ezworld.json',
-        'worlds/world3.json',
-        'worlds/001.json',
-        'worlds/002.json',
-        'worlds/003.json',
-        'worlds/004.json',
+        # 'worlds/ezworld.json',
+        # 'worlds/world3.json',
+        # 'worlds/001.json',
+        # 'worlds/002.json',
+        # 'worlds/003.json',
+        # 'worlds/004.json',
          'worlds/005.json'
     ]
-    population = 100  # Poblacion inicial
+    population = 15  # Poblacion inicial
     lambda_ = 12  # Cantidad de nuevos hijos
-    mu = 100  # Cantidad de padres
+    mu = 15  # Cantidad de padres
     mutation = 0.07  # Probabilidad de mutacion
     crossover = None  # dejar siempre en None
 
@@ -44,7 +44,7 @@ def main():
     worlds = [World(w) for w in worlds_list]
 
     fitness = 3000
-    generations = 50
+    generations = 30
 
     genetic = GeneticAlgorithm(initial_population=population,
                                lambda_=lambda_,
@@ -55,7 +55,9 @@ def main():
                                world=world,
                                hidden_layers=shape_network,
                                x=x, y=y, rotation=rotation, fitness=fitness,
-                               generations=generations, instances=worlds)
+                               generations=generations,
+                               # instances=worlds
+                               )
 
     genetic.pick_weights()
     genetic.execute()

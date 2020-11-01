@@ -36,13 +36,18 @@ class Individual:
     def calculate_fitness(self, instances=None):
         self.car.run_in_loop()
         self.fitness = self.car.distance
+        fitness = [self.fitness]
 
         if instances:
             for i in instances:
                 self.car.reset_world(i)
                 self.car.run_in_loop()
+                # print(self.car.distance, sep=' ')
+                fitness.append(self.car.distance)
                 self.fitness += self.car.distance
-            self.fitness /= (len(instances)+1)
+            # self.fitness /= (len(instances)+1)
+            # print()
+            print(fitness)
 
         return self.fitness
 

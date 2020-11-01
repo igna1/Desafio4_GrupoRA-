@@ -107,7 +107,7 @@ class Car:
         elif predict[0, 1] > 0.5:
             self.turn_right()
         if self.counter_turn == Car.MAX_TURNS:
-            print('exceeded turns')
+            # print('exceeded turns')
             self.crashed = True
         # print(self.distance)
 
@@ -133,17 +133,23 @@ class Car:
             self.__update_segments(dr=0.03)
 
     def run_in_loop(self):
+        # print(self.world.name, end='\t')
         while not self.crashed:
             self.update()
             if self.distance > 3000:
+                # print(self.distance, end=' ')
                 return
+        # print(self.distance, end=' ')
 
     def reset_world(self, world):
         self.world = world
         self.x = world.init_position[0]
         self.y = world.init_position[1]
+        self.distance = 0
         self.rotation = world.init_position[2]
         self.lidar = Lidar(world, [self.x, self.y], self.rotation)
+        self.__update_segments(dx=self.x, dy=self.y, dr=self.rotation)
+        self.crashed = False
 
 
     def __update_segments(self, dx: float = 0, dy: float = 0, dr: float = 0):
