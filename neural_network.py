@@ -1,8 +1,9 @@
 import numpy as np
 
+
 class Neural_Network():
 
-	def __init__(self,inputs,training_inputs,training_outputs):
+	def __init__(self,inputs,training_inputs=None,training_outputs=None):
 		self.inputs = np.array(inputs)
 		self.training_inputs = np.array(training_inputs)
 		self.training_outputs = np.array(training_outputs)

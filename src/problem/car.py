@@ -6,6 +6,7 @@ from src.problem.segment import Segment
 from src.problem.lidar import Lidar
 from src.problem.world import World
 
+
 class Car:
 
     # Posiciones del centro del carro
@@ -41,6 +42,7 @@ class Car:
         self.rotation = rotation
         self.velocity = 1
         self.lidar = Lidar(world, [self.x, self.y], self.rotation)
+        self.distance = 0
 
         # Creando cuarpo del carro
         p1 = (-self.WIDTH/2, -self.HEIGHT/2)
@@ -73,6 +75,7 @@ class Car:
         self.__update_segments(dx=dx, dy=dy)
         self.lidar.set_position([self.x, self.y], self.rotation)
 
+        self.distance += self.velocity
         # Comprobando colision del carro
         for segment in self.segments:
             if self.crashed:
@@ -134,9 +137,8 @@ class Car:
         self.__update()
         for segment in self.segments:
             segment.draw(surface)
-        pygame.draw.circle(surface, (200,0,0), (self.x, self.y), 5)
+        x, y = self.x, int(self.y)
 
-<<<<<<< HEAD
-=======
+        pygame.draw.circle(surface, (200,0,0), (int(x), y), 5)
+
         self.lidar.draw(surface)
->>>>>>> origin/problema

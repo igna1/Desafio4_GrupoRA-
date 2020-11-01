@@ -1,4 +1,5 @@
 import numpy as np
+import neural_network as nn
 
 DEFAULT_FITNESS = -1 * np.inf
 
@@ -11,9 +12,11 @@ class Individual:
     size_flattened = 0
 
     def __init__(self, shape_network):
-        # TODO: Crear red dentro de individuo
-        self.network = None
+        self.network = nn.Neural_Network(shape_network[0])
+        for i in range(1, len(shape_network)):
+            self.network.add_layer(shape_network[i])
         Individual.size_flattened = sum(shape_network)
+
         self.fitness = DEFAULT_FITNESS
 
     def calculate_fitness(self):
@@ -46,3 +49,8 @@ class Individual:
             layer.weights = weights[section: size].reshape(layer.weights.shape)
 
             section += size
+
+
+if __name__ == '__main__':
+    ind = Individual([4,10,4])
+    print(ind.network.layers)

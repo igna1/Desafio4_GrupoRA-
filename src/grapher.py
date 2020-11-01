@@ -24,17 +24,8 @@ class Grapher:
         self.__done = False
         pygame.display.set_caption("IA Driver")
 
-<<<<<<< HEAD
-        #deberíamos pasarle la wea desde aqui 
-        self.__world = World("world2.json")
-        with open("world2.json", 'r') as fh:
-                x,y,r = json.load(fh)["init_position"]
-        
-        self.__car = Car(x, y, r)
-=======
         self.__world = World("world1.json")
         self.__car = Car(self.__world, 200, 100, 1)
->>>>>>> origin/problema
 
     def run(self):
         """
