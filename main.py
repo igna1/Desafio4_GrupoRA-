@@ -20,7 +20,7 @@ def main():
     crossover = None  # dejar siempre en None
 
     shape_network = [3]  # Forma que tiene la red
-    world = World()
+    world = World("ezworld.json")
     x = 162
     y = 302
     rotation = -1.6
@@ -53,3 +53,4 @@ def main_old():
 
 if __name__ == "__main__":
     main()
+    main_old()

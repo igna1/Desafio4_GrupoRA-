@@ -35,6 +35,9 @@ class GeneticAlgorithm:
     def execute(self):
         while not self.stop_condition():
             self.evaluate()
+            self.population = sorted(self.population,
+                                     key=lambda x: x.fitness,
+                                     reverse=True)
 
             self.best_agent = self.population[0]
             self.best_fitness = self.population[0].fitness
@@ -45,9 +48,10 @@ class GeneticAlgorithm:
             self.selection(offsprings)
 
             self.generations += 1
-            print(f'best fitness: {self.best_fitness}')
+            print(f'best current fitness: {self.best_fitness}')
 
-        print(f'best agent fitness: {self.best_fitness}')
+        print(f'best agent fitness: {self.best_agent.fitness}')
+        self.best_agent.save()
         return self.best_agent
 
     def parent_selection(self):
@@ -136,6 +140,9 @@ class GeneticAlgorithm:
         # Propuesta: ejecutar solamente los nuevos individuos creados
         for car in self.population:
             car.calculate_fitness()
+            print('.', end='')
+
+        print('\n')
 
     def selection(self, offsprings):
         """

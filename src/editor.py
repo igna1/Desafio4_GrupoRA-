@@ -119,5 +119,4 @@ class Editor:
         self.__screen.blit(self.__r_info,(500,90))
         
 
-
         pygame.display.update()

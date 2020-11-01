@@ -1,12 +1,12 @@
 import numpy as np
-
+import json
 
 class Neural_Network():
 
 	def __init__(self, inputs, training_inputs=None, training_outputs=None):
 		self.inputs = np.random.randn(1, inputs)
-		self.training_inputs = np.array(training_inputs)
-		self.training_outputs = np.array(training_outputs)
+		# self.training_inputs = np.array(training_inputs)
+		# self.training_outputs = np.array(training_outputs)
 		self.layers = []
 
 	def add_layer(self, n_neurons):
@@ -54,6 +54,17 @@ class Neural_Network():
 		self.output = last_result
 		return self.output
 
+	def save(self):
+		i = 0
+		for layer in self.layers:
+			layer.save('layer'+str(i))
+			i += 1
+
+	def load(self):
+		i = 0
+		for layer in self.layers:
+			layer.load('layer' + str(i))
+			i += 1
 
 class Layer:
 	def __init__(self, inputs, neurons):
@@ -72,6 +83,19 @@ class Layer:
 	def forward(self,inputs):
 		return self.sigmoid_activation(np.dot(inputs.astype(float),self.weights)+self.biases)
 
+	def save(self, name):
+		self.weights.tofile(name)
+		self.biases.tofile('bias_'+name)
+
+	def load(self, name):
+		shape_weights = self.weights.shape
+		shape_biases = self.biases.shape
+
+		self.weights = np.fromfile(name).reshape(shape_weights)
+		self.biases = np.fromfile('bias_'+name).reshape(shape_biases)
+		print('\nloaded data')
+		print(self.weights, self.weights.shape)
+		print(self.biases, self.biases.shape)
 
 if __name__ == '__main__':
 	inputs = [1, 2, 3, 4, 5]

@@ -11,9 +11,19 @@ class Individual:
     Para efectos del desafío debe recibir una red completa
     """
     size_flattened = 0
+    x = None
+    y = None
+    world = None
+    rotation = None
+    layers = None
 
     def __init__(self, world, x, y, rotation, hidden_layers=None):
         self.car = Car(world, x, y, rotation, hidden_layers)
+        Individual.world = world
+        Individual.x = x
+        Individual.y = y
+        Individual.rotation = rotation
+        Individual.layers = hidden_layers
 
         Individual.size_flattened = self.car.brain.size()
 
@@ -24,7 +34,7 @@ class Individual:
               f"fitness: {self.fitness}")
 
     def calculate_fitness(self):
-        self.car.update()
+        self.car.run_in_loop()
         self.fitness = self.car.distance
         return self.fitness
 
@@ -46,6 +56,7 @@ class Individual:
         """
         self.fitness = DEFAULT_FITNESS
         section = 0
+        self.car = Car(Individual.world, Individual.x, Individual.y, Individual.rotation, Individual.layers)
         for layer in self.car.brain.layers:
             size = layer.weights.size
             # print(section, size)
@@ -53,3 +64,5 @@ class Individual:
 
             section += size
 
+    def save(self):
+        self.car.save_brain()

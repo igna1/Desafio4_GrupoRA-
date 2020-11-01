@@ -44,7 +44,7 @@ class Car:
         self.x = x
         self.y = y
         self.rotation = rotation
-        self.velocity = 0.1
+        self.velocity = 1
         self.lidar = Lidar(world, [self.x, self.y], self.rotation)
         self.distance = 0
         self.brain = nn.Neural_Network(self.lidar.NUMBER_OF_LASERS)
@@ -109,6 +109,7 @@ class Car:
         if self.counter_turn == Car.MAX_TURNS:
             print('exceeded turns')
             self.crashed = True
+        # print(self.distance)
 
     def turn_left(self):
         if self.first_turn != -1:
@@ -130,6 +131,12 @@ class Car:
         if not self.crashed:
             self.rotation += 0.01
             self.__update_segments(dr=0.01)
+
+    def run_in_loop(self):
+        while not self.crashed:
+            self.update()
+            if self.distance > 3000:
+                return
 
     def __update_segments(self, dx: float = 0, dy: float = 0, dr: float = 0):
         for segment in self.segments:
@@ -175,3 +182,9 @@ class Car:
         pygame.draw.circle(surface, (200,0,0), (int(x), y), 5)
 
         self.lidar.draw(surface)
+
+    def load_brain(self):
+        self.brain.load()
+
+    def save_brain(self):
+        self.brain.save()
