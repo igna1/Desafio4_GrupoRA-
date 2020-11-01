@@ -82,7 +82,7 @@ class Car:
                 break
             for world_segment in self.world.segments:
                 if world_segment.intersect(segment):
-                    self.crashed = True
+                    #self.crashed = True
                     break
 
             if self.crashed:

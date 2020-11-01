@@ -64,6 +64,44 @@ class Segment:
         pp3 = segment.get_min_p()
         pp4 = segment.get_max_p()
 
+        # Caso en que son verticales
+        if pp1[0] - pp2[0] == 0 and pp3[0] - pp4[0] == 0:
+            return None
+        if pp1[1] - pp2[1] == 0 and pp3[1] - pp4[1] == 0:
+            return None
+        elif pp1[0] - pp2[0] == 0 and pp4[1] - pp3[1] == 0:
+            px = pp1[0]
+            py = pp4[1]
+            if min(pp1[1], pp2[1]) <= py <= max(pp1[1], pp2[1]) and \
+                pp3[0] <= px <= pp4[0]:
+                return px, py
+            return None
+        elif pp1[1] - pp2[1] == 0 and pp4[0] - pp3[0] == 0:
+            px = pp3[0]
+            py = pp1[1]
+            if min(pp3[1], pp4[1]) <= py <= max(pp3[1], pp4[1]) and \
+                pp1[0] <= px <= pp2[0]:
+                return px, py
+            return None
+        elif pp1[0] - pp2[0] == 0:
+            m = (pp4[1] - pp3[1]) / (pp4[0] - pp3[0])
+            b = pp3[1] - pp3[0] * m
+            px = pp1[0]
+            py = m * px + b
+            if min(pp1[1], pp2[1]) <= py <= max(pp1[1], pp2[1]) and \
+                pp3[0] <= px <= pp4[0]:
+                return px, py
+            return None
+        elif pp3[0] - pp4[0] == 0:
+            m = (pp2[1] - pp1[1]) / (pp2[0] - pp1[0])
+            b = pp1[1] - pp1[0] * m
+            px = pp3[0]
+            py = m * px + b
+            if min(pp3[1], pp4[1]) <= py <= max(pp3[1], pp4[1]) and \
+                pp1[0] <= px <= pp2[0]:
+                return px, py
+            return None
+
         # Obteniendo valores de la ecuacion
         ax = pp2[0] - pp1[0]
         bx = pp4[0] - pp3[0]
@@ -72,10 +110,7 @@ class Segment:
         by = pp4[1] - pp3[1]
         cy = pp3[1] - pp1[1]
 
-        # print(f"{-ax} * {by} + {bx} * {ay}")
         det = -ax * by + bx * ay
-        if det == 0:
-            det = 10**(-6)
 
         lambda1 = (cx * (-by) + bx * cy) / det
 
