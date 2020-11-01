@@ -59,6 +59,7 @@ class Neural_Network():
 		for layer in self.layers:
 			layer.save('layer'+str(i))
 			i += 1
+		print('data saved')
 
 	def load(self):
 		i = 0

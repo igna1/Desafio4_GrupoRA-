@@ -49,7 +49,7 @@ class Car:
         self.distance = 0
         self.brain = nn.Neural_Network(self.lidar.NUMBER_OF_LASERS)
         if hidden_layers is None:
-            hidden_layers = [3]
+            hidden_layers = [5]
         for nb_neurons in hidden_layers:
             self.brain.add_layer(nb_neurons)
         self.brain.add_layer(Car.BRAIN_OUTPUT)

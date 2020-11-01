@@ -10,6 +10,7 @@ def load_instances(path):
 
 WORLD = 'world_large.json'
 # WORLD = 'ezworld.json'
+# WORLD = 'world3.json'
 
 def main():
     # Cargar los archivos de pistas
@@ -18,7 +19,7 @@ def main():
     population = 100  # Poblacion inicial
     lambda_ = 12  # Cantidad de nuevos hijos
     mu = 100  # Cantidad de padres
-    mutation = 0.2  # Probabilidad de mutacion
+    mutation = 0.07  # Probabilidad de mutacion
     crossover = None  # dejar siempre en None
 
     shape_network = [5]  # Forma que tiene la red
@@ -58,5 +59,5 @@ def main_old():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
     main_old()
