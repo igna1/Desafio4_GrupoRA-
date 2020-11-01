@@ -1,5 +1,6 @@
 import numpy as np
 import neural_network as nn
+from src.problem.car import Car
 
 DEFAULT_FITNESS = -1 * np.inf
 
@@ -11,20 +12,21 @@ class Individual:
     """
     size_flattened = 0
 
-    def __init__(self, shape_network):
-        self.network = nn.Neural_Network(shape_network[0])
-        for i in range(1, len(shape_network)):
-            self.network.add_layer(shape_network[i])
-        Individual.size_flattened = sum(shape_network)
+    def __init__(self, world, x, y, rotation, hidden_layers=None):
+        self.car = Car(world, x, y, rotation, hidden_layers)
+
+        Individual.size_flattened = self.car.brain.size()
 
         self.fitness = DEFAULT_FITNESS
 
-    def calculate_fitness(self):
-        fitness = 0
+    def print_status(self):
+        print(f"size: {Individual.size_flattened}\n"
+              f"fitness: {self.fitness}")
 
-        self.fitness = fitness
-        return fitness
-        pass
+    def calculate_fitness(self):
+        self.car.update()
+        self.fitness = self.car.distance
+        return self.fitness
 
     def get_genes(self):
         """
@@ -32,7 +34,7 @@ class Individual:
         :return:
         """
         layers = []
-        for layer in self.network.layers:
+        for layer in self.car.brain.layers:
             layers.append(layer.weights.flatten())
         return np.concatenate(layers)
 
@@ -44,13 +46,10 @@ class Individual:
         """
         self.fitness = DEFAULT_FITNESS
         section = 0
-        for layer in self.network.layers:
+        for layer in self.car.brain.layers:
             size = layer.weights.size
-            layer.weights = weights[section: size].reshape(layer.weights.shape)
+            # print(section, size)
+            layer.weights = weights[section: section+size].reshape(layer.weights.shape)
 
             section += size
 
-
-if __name__ == '__main__':
-    ind = Individual([4,10,4])
-    print(ind.network.layers)

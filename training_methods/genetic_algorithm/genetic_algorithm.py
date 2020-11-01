@@ -3,17 +3,17 @@ import numpy as np
 import random
 
 
-def create_population(nb_population: int, shape_network):
+def create_population(nb_population: int, hidden_layers, world, x, y, rotation):
     """
     Crea una población para el algoritmo genético.
 
-    :param shape_network: Forma de la red
+    :param hidden_layers: Forma de la red
     :param nb_population: Cantidad de individuos en la población
     :return: Arreglo de numpy con la población creada
     """
     population = np.ndarray((nb_population,), dtype=np.object)
     for i in range(nb_population):
-        population[i] = individual.Individual(shape_network)
+        population[i] = individual.Individual(world, x, y, rotation, hidden_layers)
 
     return population
 
@@ -21,16 +21,13 @@ def create_population(nb_population: int, shape_network):
 class GeneticAlgorithm:
 
     def __init__(self, initial_population, lambda_, mu, selection,
-                 mutation, crossover, problem, stop_condition, shape_network):
+                 mutation, crossover, world, hidden_layers, x, y, rotation):
         self.initial_population = initial_population
-        self.population = create_population(initial_population, shape_network)
-        self.problem = problem
+        self.population = create_population(initial_population, hidden_layers, world, x, y, rotation)
+        self.problem = world
         self.lambda_ = lambda_
         self.mu = mu
-        self.selection = selection
         self.mutation_rate = mutation
-        self.crossover = crossover
-        self.stop_condition = stop_condition
         self.best_agent = None
         self.best_fitness = -1 * np.inf
         self.generations = 0
@@ -48,6 +45,7 @@ class GeneticAlgorithm:
             self.selection(offsprings)
 
             self.generations += 1
+            print(f'best fitness: {self.best_fitness}')
 
         print(f'best agent fitness: {self.best_fitness}')
         return self.best_agent
@@ -108,10 +106,13 @@ class GeneticAlgorithm:
             genes_1 = first_parent.get_genes()
             genes_2 = second_parent.get_genes()
 
-            offsprings[i] = np.concatenate(genes_1[0:split_point],
-                                           genes_2[split_point:-1])
-            offsprings[i+1] = np.concatenate(genes_2[0:split_point],
-                                             genes_1[split_point:-1])
+            # print(genes_1[0:split_point-1], genes_1[0:split_point-1].shape)
+            # print(genes_2[split_point:-1], genes_2[split_point:-1].shape)
+
+            offsprings[i] = np.concatenate((genes_1[0:split_point+1],
+                                           genes_2[split_point:-1]))
+            offsprings[i+1] = np.concatenate((genes_2[0:split_point+1],
+                                             genes_1[split_point:-1]))
 
         return offsprings
 
@@ -125,7 +126,7 @@ class GeneticAlgorithm:
         for child in offsprings:
             random_value = random.uniform(-1, 1)
             random_choice = random.randint(0,
-                                           individual.Individual.size_flattened)
+                                           individual.Individual.size_flattened-1)
 
             if random.random() <= self.mutation_rate:
                 child[random_choice] = random_value
@@ -133,7 +134,8 @@ class GeneticAlgorithm:
     def evaluate(self):
         # Calcular el fitness de cada individuo
         # Propuesta: ejecutar solamente los nuevos individuos creados
-        pass
+        for car in self.population:
+            car.calculate_fitness()
 
     def selection(self, offsprings):
         """
@@ -155,4 +157,7 @@ class GeneticAlgorithm:
         Evalúa la condición de termino asignada para finalizar la búsqueda.
         :return:
         """
-        pass
+        if self.best_fitness > 1000:
+            return True
+        return False
+

@@ -5,6 +5,7 @@ import pygame
 from src.problem.segment import Segment
 from src.problem.lidar import Lidar
 from src.problem.world import World
+import neural_network as nn
 
 
 class Car:
@@ -36,13 +37,22 @@ class Car:
     WIDTH = 20
     HEIGHT = 10
 
-    def __init__(self, world, x: float, y: float, rotation: float = 0):
+    BRAIN_OUTPUT = 2
+    MAX_TURNS = 600
+
+    def __init__(self, world, x: float, y: float, rotation: float = 0, hidden_layers=None):
         self.x = x
         self.y = y
         self.rotation = rotation
-        self.velocity = 0.5
+        self.velocity = 0.1
         self.lidar = Lidar(world, [self.x, self.y], self.rotation)
         self.distance = 0
+        self.brain = nn.Neural_Network(self.lidar.NUMBER_OF_LASERS)
+        if hidden_layers is None:
+            hidden_layers = [3]
+        for nb_neurons in hidden_layers:
+            self.brain.add_layer(nb_neurons)
+        self.brain.add_layer(Car.BRAIN_OUTPUT)
 
         # Creando cuarpo del carro
         p1 = (-self.WIDTH/2, -self.HEIGHT/2)
@@ -60,7 +70,10 @@ class Car:
         self.crashed = False
         self.world = world
 
-    def __update(self):
+        self.first_turn = 0
+        self.counter_turn = 0
+
+    def update(self):
         # Si el auto está colisionado no se actualiza
         if self.crashed:
             return
@@ -82,21 +95,41 @@ class Car:
                 break
             for world_segment in self.world.segments:
                 if world_segment.intersect(segment):
-                    #self.crashed = True
+                    self.crashed = True
                     break
 
             if self.crashed:
                 break
 
+        predict = self.brain.forward(self.lidar.get_values())
+        if predict[0, 0] > 0.5:
+            self.turn_left()
+        elif predict[0, 1] > 0.5:
+            self.turn_right()
+        if self.counter_turn == Car.MAX_TURNS:
+            print('exceeded turns')
+            self.crashed = True
+
     def turn_left(self):
+        if self.first_turn != -1:
+            self.first_turn = -1
+            self.counter_turn = 0
+        else:
+            self.counter_turn += 1
         if not self.crashed:
-            self.rotation -= 0.1
-            self.__update_segments(dr=-0.1)
+            self.rotation -= 0.01
+            self.__update_segments(dr=-0.01)
     
     def turn_right(self):
+        if self.first_turn != 1:
+            self.first_turn = 1
+            self.counter_turn = 0
+        else:
+            self.counter_turn += 1
+
         if not self.crashed:
-            self.rotation += 0.1
-            self.__update_segments(dr=0.1)
+            self.rotation += 0.01
+            self.__update_segments(dr=0.01)
 
     def __update_segments(self, dx: float = 0, dy: float = 0, dr: float = 0):
         for segment in self.segments:
@@ -134,7 +167,7 @@ class Car:
             segment.p2 = p2
 
     def draw(self, surface: pygame.surface.Surface):
-        self.__update()
+        self.update()
         for segment in self.segments:
             segment.draw(surface)
         x, y = self.x, int(self.y)

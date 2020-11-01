@@ -1,6 +1,8 @@
 from src.grapher import Grapher
 from src.problem.segment import Segment
 from training_methods.genetic_algorithm.genetic_algorithm import GeneticAlgorithm
+from training_methods.genetic_algorithm.individual import Individual
+from src.problem.world import World
 
 
 def load_instances(path):
@@ -10,14 +12,18 @@ def load_instances(path):
 def main():
     # Cargar los archivos de pistas
     instances = load_instances(".")  # cargar un circuito
-    stop_condition = None  # Condicion de termino para AG (no implementado)
+    # stop_condition = None  # Condicion de termino para AG (no implementado)
     population = 100  # Poblacion inicial
     lambda_ = 4  # Cantidad de nuevos hijos
     mu = 100  # Cantidad de padres
     mutation = 0.2  # Probabilidad de mutacion
     crossover = None  # dejar siempre en None
 
-    shape_network = [5, 15, 2]  # Forma que tiene la red
+    shape_network = [3]  # Forma que tiene la red
+    world = World()
+    x = 162
+    y = 302
+    rotation = -1.6
 
     genetic = GeneticAlgorithm(initial_population=population,
                                lambda_=lambda_,
@@ -25,10 +31,9 @@ def main():
                                selection=None,
                                mutation=mutation,
                                crossover=crossover,
-                               problem=instances,
-                               stop_condition=stop_condition,
-                               shape_network=shape_network
-                               )
+                               world=world,
+                               hidden_layers=shape_network,
+                               x=x, y=y, rotation=rotation)
 
     genetic.execute()
 
@@ -36,6 +41,10 @@ def main():
 
     pass
 
+def main_indivual():
+    world = World()
+    indiv = Individual(world, 162, 301, -1.6, [3])
+    indiv.print_status()
 
 def main_old():
     grapher = Grapher()
@@ -43,4 +52,4 @@ def main_old():
 
 
 if __name__ == "__main__":
-    main_old()
+    main()

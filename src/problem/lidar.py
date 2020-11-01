@@ -13,8 +13,8 @@ class Lidar:
     
     # Constantes
     LASER_LENGHT = 200              # Largo de cada laser
-    LIDAR_AMPLITUDE = math.pi       # Angulo de cobertura del lidar en radianes
-    NUMBER_OF_LASERS = 20
+    LIDAR_AMPLITUDE = math.pi/2       # Angulo de cobertura del lidar en radianes
+    NUMBER_OF_LASERS = 5
 
     def __init__(self, world: World, position: List[float], rotation: float):
         self.__world = world
@@ -25,10 +25,10 @@ class Lidar:
 
     def set_position(self, position: List[float], rotation: float):
         self.__position = position
-        self.rotation = rotation
+        self.__rotation = rotation
 
     def get_values(self) -> List[float]:
-        angle = self.rotation - self.LIDAR_AMPLITUDE/2
+        angle = self.__rotation - self.LIDAR_AMPLITUDE/2
         values = []
 
         for _ in range(self.NUMBER_OF_LASERS):
@@ -50,7 +50,7 @@ class Lidar:
         return values
 
     def draw(self, surface: pygame.surface.Surface):
-        angle = self.rotation - self.LIDAR_AMPLITUDE/2
+        angle = self.__rotation - self.LIDAR_AMPLITUDE/2
 
         for value in self.get_values():
             lenght = self.LASER_LENGHT * value

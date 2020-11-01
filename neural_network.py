@@ -4,7 +4,7 @@ import numpy as np
 class Neural_Network():
 
 	def __init__(self, inputs, training_inputs=None, training_outputs=None):
-		self.inputs = np.array(inputs)
+		self.inputs = np.random.randn(1, inputs)
 		self.training_inputs = np.array(training_inputs)
 		self.training_outputs = np.array(training_outputs)
 		self.layers = []
@@ -15,6 +15,12 @@ class Neural_Network():
 		else:
 			self.layers.append(Layer(self.layers[len(self.layers)-1].n_neurons,n_neurons))
 
+	def size(self):
+		size = 0
+		for i in range(len(self.layers)):
+			size += self.layers[i].weights.size
+
+		return size
 	"""
 	def train(self,iterations):
 			for iteration in range(iterations):
@@ -34,17 +40,20 @@ class Neural_Network():
 					print(adjustement)
 """
 
-	def forward(self):
+	def forward(self, inputs=None):
 		layer = 0
+		if inputs:
+			self.inputs = np.array(inputs)
 		for i in self.layers:
 			if layer == 0:
 				last_result = i.forward(self.inputs)
 			else:
 				last_result = i.forward(last_result)
-			layer +=1
+			layer += 1
 
 		self.output = last_result
-		
+		return self.output
+
 
 class Layer:
 	def __init__(self, inputs, neurons):
@@ -54,6 +63,7 @@ class Layer:
 		self.biases = np.zeros((1,neurons))
 
 	def sigmoid_activation(self,x):
+		x = x.astype(np.float64)
 		return 1/(1 + np.exp(-x))
 
 	def sigmoid_activation_derivate(self,x):
@@ -66,11 +76,11 @@ class Layer:
 if __name__ == '__main__':
 	inputs = [1, 2, 3, 4, 5]
 	output = [0, 1, 0, 1, 0]
-	red = Neural_Network([6], inputs, output)
+	red = Neural_Network(6)
 	red.add_layer(3)
 	red.add_layer(9)
 	red.add_layer(1)
 	red.add_layer(23)
-	red.add_layer(1)
+	red.add_layer(2)
 	red.forward()
 	print(red.output)
