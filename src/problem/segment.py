@@ -72,7 +72,10 @@ class Segment:
         by = pp4[1] - pp3[1]
         cy = pp3[1] - pp1[1]
 
+        # print(f"{-ax} * {by} + {bx} * {ay}")
         det = -ax * by + bx * ay
+        if det == 0:
+            det = 10**(-6)
 
         lambda1 = (cx * (-by) + bx * cy) / det
 

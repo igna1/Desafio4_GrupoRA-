@@ -9,9 +9,9 @@ if __name__ == "__main__":
 		filename = sys.argv[1]
 		if filename.endswith(".json"):
 			if os.path.exists(filename):
-				editor = Editor(filename,True)
+				editor = Editor(filename, True)
 			else:
-				editor = Editor(filename,False)
+				editor = Editor(filename, False)
 			editor.run()
 		else:
-			print ("el nombre del archivo debe terminar en .json")
+			print("el nombre del archivo debe terminar en .json")

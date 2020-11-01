@@ -3,18 +3,17 @@ import numpy as np
 
 class Neural_Network():
 
-	def __init__(self,inputs,training_inputs=None,training_outputs=None):
+	def __init__(self, inputs, training_inputs=None, training_outputs=None):
 		self.inputs = np.array(inputs)
 		self.training_inputs = np.array(training_inputs)
 		self.training_outputs = np.array(training_outputs)
 		self.layers = []
 
-	def add_layer(self,n_neurons):
+	def add_layer(self, n_neurons):
 		if len(self.layers) == 0:
-			self.layers.append(Layer(self.inputs.size,n_neurons))
+			self.layers.append(Layer(self.inputs.size, n_neurons))
 		else:
 			self.layers.append(Layer(self.layers[len(self.layers)-1].n_neurons,n_neurons))
-
 
 	"""
 	def train(self,iterations):
@@ -33,9 +32,8 @@ class Neural_Network():
 					error = self.training_outputs - last_result
 					adjustement = np.dot(self.training_inputs.T, error * layer.sigmoid_activation_derivate(last_result))
 					print(adjustement)
-
 """
-	#
+
 	def forward(self):
 		layer = 0
 		for i in self.layers:
@@ -48,9 +46,8 @@ class Neural_Network():
 		self.output = last_result
 		
 
-
 class Layer:
-	def __init__(self,inputs,neurons):
+	def __init__(self, inputs, neurons):
 		self.n_inputs = inputs
 		self.n_neurons = neurons
 		self.weights = np.random.randn(inputs,neurons)
@@ -67,9 +64,9 @@ class Layer:
 
 
 if __name__ == '__main__':
-	inputs = [1,2,3,4,5]
-	output = [0,1,0,1,0]
-	red = Neural_Network([6],inputs,output)
+	inputs = [1, 2, 3, 4, 5]
+	output = [0, 1, 0, 1, 0]
+	red = Neural_Network([6], inputs, output)
 	red.add_layer(3)
 	red.add_layer(9)
 	red.add_layer(1)
@@ -77,5 +74,3 @@ if __name__ == '__main__':
 	red.add_layer(1)
 	red.forward()
 	print(red.output)
-
-	

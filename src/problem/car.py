@@ -40,7 +40,7 @@ class Car:
         self.x = x
         self.y = y
         self.rotation = rotation
-        self.velocity = 1
+        self.velocity = 0.5
         self.lidar = Lidar(world, [self.x, self.y], self.rotation)
         self.distance = 0
 
