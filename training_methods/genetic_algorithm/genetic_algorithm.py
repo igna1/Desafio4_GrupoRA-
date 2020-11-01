@@ -21,7 +21,7 @@ def create_population(nb_population: int, hidden_layers, world, x, y, rotation):
 class GeneticAlgorithm:
 
     def __init__(self, initial_population, lambda_, mu, selection,
-                 mutation, crossover, world, hidden_layers, x, y, rotation):
+                 mutation, crossover, world, hidden_layers, x, y, rotation, fitness=np.inf, generations=50):
         self.initial_population = initial_population
         self.population = create_population(initial_population, hidden_layers, world, x, y, rotation)
         self.problem = world
@@ -31,6 +31,8 @@ class GeneticAlgorithm:
         self.best_agent = None
         self.best_fitness = -1 * np.inf
         self.generations = 0
+        self.max_fitness = fitness
+        self.max_gen = generations
 
     def execute(self):
         while not self.stop_condition():
@@ -48,7 +50,8 @@ class GeneticAlgorithm:
             self.selection(offsprings)
 
             self.generations += 1
-            print(f'best current fitness: {self.best_fitness}')
+            print(f'{self.generations} best current fitness: {self.best_fitness} '
+                  f'{self.population[1].fitness} {self.population[2].fitness}\t size: {len(self.population)}')
 
         print(f'best agent fitness: {self.best_agent.fitness}')
         self.best_agent.save()
@@ -128,12 +131,13 @@ class GeneticAlgorithm:
         :return:
         """
         for child in offsprings:
-            random_value = random.uniform(-1, 1)
-            random_choice = random.randint(0,
-                                           individual.Individual.size_flattened-1)
+            for i in range(random.randint(1, 10)):
+                random_value = random.uniform(-1, 1)
+                random_choice = random.randint(0,
+                                               individual.Individual.size_flattened-1)
 
-            if random.random() <= self.mutation_rate:
-                child[random_choice] = random_value
+                if random.random() <= self.mutation_rate:
+                    child[random_choice] = random_value
 
     def evaluate(self):
         # Calcular el fitness de cada individuo
@@ -164,7 +168,7 @@ class GeneticAlgorithm:
         Evalúa la condición de termino asignada para finalizar la búsqueda.
         :return:
         """
-        if self.best_fitness > 1000:
+        if self.best_fitness > self.max_fitness or self.generations > self.max_gen:
             return True
         return False
 

@@ -8,22 +8,27 @@ from src.problem.world import World
 def load_instances(path):
     return 0
 
+WORLD = 'world_large.json'
+# WORLD = 'ezworld.json'
 
 def main():
     # Cargar los archivos de pistas
     instances = load_instances(".")  # cargar un circuito
     # stop_condition = None  # Condicion de termino para AG (no implementado)
     population = 100  # Poblacion inicial
-    lambda_ = 4  # Cantidad de nuevos hijos
+    lambda_ = 12  # Cantidad de nuevos hijos
     mu = 100  # Cantidad de padres
     mutation = 0.2  # Probabilidad de mutacion
     crossover = None  # dejar siempre en None
 
-    shape_network = [3]  # Forma que tiene la red
-    world = World("ezworld.json")
+    shape_network = [5]  # Forma que tiene la red
+    world = World(WORLD)
     x = 162
     y = 302
     rotation = -1.6
+
+    fitness= 3000
+    generations = 50
 
     genetic = GeneticAlgorithm(initial_population=population,
                                lambda_=lambda_,
@@ -33,7 +38,8 @@ def main():
                                crossover=crossover,
                                world=world,
                                hidden_layers=shape_network,
-                               x=x, y=y, rotation=rotation)
+                               x=x, y=y, rotation=rotation, fitness=fitness,
+                               generations=generations)
 
     genetic.execute()
 
@@ -47,7 +53,7 @@ def main_indivual():
     indiv.print_status()
 
 def main_old():
-    grapher = Grapher()
+    grapher = Grapher(WORLD)
     grapher.run()
 
 

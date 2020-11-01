@@ -41,9 +41,9 @@ class Car:
     MAX_TURNS = 600
 
     def __init__(self, world, x: float, y: float, rotation: float = 0, hidden_layers=None):
-        self.x = x
-        self.y = y
-        self.rotation = rotation
+        self.x = world.init_position[0]
+        self.y = world.init_position[1]
+        self.rotation = world.init_position[2]
         self.velocity = 1
         self.lidar = Lidar(world, [self.x, self.y], self.rotation)
         self.distance = 0
@@ -66,7 +66,7 @@ class Car:
             Segment(p4, p1)
         ]
 
-        self.__update_segments(dx=x, dy=y, dr=rotation)
+        self.__update_segments(dx=self.x, dy=self.y, dr=self.rotation)
         self.crashed = False
         self.world = world
 
@@ -118,8 +118,8 @@ class Car:
         else:
             self.counter_turn += 1
         if not self.crashed:
-            self.rotation -= 0.01
-            self.__update_segments(dr=-0.01)
+            self.rotation -= 0.03
+            self.__update_segments(dr=-0.03)
     
     def turn_right(self):
         if self.first_turn != 1:
@@ -129,8 +129,8 @@ class Car:
             self.counter_turn += 1
 
         if not self.crashed:
-            self.rotation += 0.01
-            self.__update_segments(dr=0.01)
+            self.rotation += 0.03
+            self.__update_segments(dr=0.03)
 
     def run_in_loop(self):
         while not self.crashed:

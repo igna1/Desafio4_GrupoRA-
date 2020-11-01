@@ -15,6 +15,7 @@ class World:
                 data = json.load(fh)
             # Cargando vectores
             self.vectors = data["world"]
+            self.init_position = data["init_position"]
 
             # Creando la lista de segmentos
             self.segments = []

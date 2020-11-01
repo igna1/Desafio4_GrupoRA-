@@ -84,15 +84,15 @@ class Layer:
 		return self.sigmoid_activation(np.dot(inputs.astype(float),self.weights)+self.biases)
 
 	def save(self, name):
-		self.weights.tofile(name)
-		self.biases.tofile('bias_'+name)
+		self.weights.tofile(name, sep=',')
+		self.biases.tofile('bias_'+name, sep=',')
 
 	def load(self, name):
 		shape_weights = self.weights.shape
 		shape_biases = self.biases.shape
 
-		self.weights = np.fromfile(name).reshape(shape_weights)
-		self.biases = np.fromfile('bias_'+name).reshape(shape_biases)
+		self.weights = np.fromfile(name, sep=',').reshape(shape_weights)
+		self.biases = np.fromfile('bias_'+name, sep=',').reshape(shape_biases)
 		print('\nloaded data')
 		print(self.weights, self.weights.shape)
 		print(self.biases, self.biases.shape)
