@@ -1,6 +1,4 @@
-#Desafío 4 Grupo RA
-
-## Instrucciones
+# Desafío 4 Grupo RA
 
 ## Descripción
 	
